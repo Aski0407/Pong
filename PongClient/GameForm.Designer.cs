@@ -63,7 +63,6 @@
             player2.Size = new Size(15, 100);
             player2.TabIndex = 2;
             player2.TabStop = false;
-            player2.Click += player2_Click;
             // 
             // ball
             // 

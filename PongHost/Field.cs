@@ -47,7 +47,7 @@ namespace PongHost
 
     internal class Field
     {
-        internal Racket player1 = new Racket(15, 100, 966, 197); //initialize the starting value
+        internal Racket player1 = new Racket(15, 100, 961, 197); //initialize the starting value
         internal Racket player2 = new Racket(15, 100, 1, 197);
         internal Rectangle ball = new Rectangle(15, 15, 493, 255);
         internal int ballX = 5; // horizontal X speed value for the ball object 

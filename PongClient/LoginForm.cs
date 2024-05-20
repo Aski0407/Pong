@@ -15,7 +15,7 @@ namespace PongClient
         private bool isLogin = true; //changes to false if the user presses on register
         private string password;
         private string username;
-        private HttpClient client;
+        private MyHttpClient client;
         public LoginForm()
         {
             InitializeComponent();

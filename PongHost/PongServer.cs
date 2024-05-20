@@ -33,7 +33,7 @@ namespace PongHost
         private int port = int.Parse(ConfigurationManager.AppSettings["Port"]);
         private Field field = new Field();
         private bool debug = bool.Parse(ConfigurationManager.AppSettings["Debug"]);
-
+        private HttpServer httpServer = new HttpServer();
         public PongServer()
         {
             listener = new TcpListener(IPAddress.Any, port);

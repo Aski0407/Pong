@@ -7,14 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections;
-
+using System.Collections.Specialized;
 namespace PongHost
 {
     internal class Users
     {
         private Dictionary<string, string> users;
         private HttpServer server;
-        string file = "users.txt"; //add path later!!!
+        string file = "users.txt";
 
         public Users()
         {
@@ -25,13 +25,10 @@ namespace PongHost
         {
             if (users != null)
             {
-                FileStream usersFile = File.Create(file);
                 File.WriteAllLines(file,
                     users.Select(entry => entry.Key + " " + entry.Value).ToArray());
             }
         }
-
-
 
         internal void LoadUserData()
         {
@@ -68,10 +65,9 @@ namespace PongHost
         internal bool Login(string payload)
         {
             //receives the payload of the request string
-            string[] userPass = payload.Split(new string[] { Common.Protocol.UserPassDelimiter }, StringSplitOptions.None); 
-
-            string username = userPass[0];
-            string password = userPass[1];
+            Dictionary<string, string> userPass = DecodeFormData(payload);
+            string username = userPass.Keys.First();
+            string password = userPass[username];
 
             if (this.users.TryGetValue(username, out string result))
             {
@@ -83,14 +79,37 @@ namespace PongHost
         internal bool Register(string payload)
         //receives the username and password, returns true if registered, returns false if the username is taken
         {
+            Dictionary<string, string> userPass = DecodeFormData(payload);
+            string username = userPass.Keys.First();
+            string password = userPass[username];
+            /*
             string[] userPass = payload.Split(new string[] { Common.Protocol.UserPassDelimiter }, StringSplitOptions.None);
 
             string username = userPass[0];
             string password = userPass[1];
+            */
             if (this.users.TryGetValue(username, out string result)) { return false; }
             users.Add(username, password);
             SerializeData();
             return true;
+        }
+        internal Dictionary<string, string> DecodeFormData(string encodedFormData)
+        {
+            var decodedData = new Dictionary<string, string>();
+
+            string[] pairs = encodedFormData.Split('&');
+            foreach (string pair in pairs)
+            {
+                string[] keyValue = pair.Split('=');
+                if (keyValue.Length == 2)
+                {
+                    string key = Uri.UnescapeDataString(keyValue[0]);
+                    string value = Uri.UnescapeDataString(keyValue[1]);
+                    decodedData[key] = value;
+                }
+            }
+
+            return decodedData;
         }
 
     }

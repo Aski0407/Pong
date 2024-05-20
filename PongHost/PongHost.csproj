@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HttpServer.cs" />
+    <Compile Include="Stats.cs" />
     <Compile Include="Users.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PongServer.cs" />

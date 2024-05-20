@@ -151,9 +151,6 @@ namespace PongClient
             }
         }
 
-        private void player2_Click(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }
