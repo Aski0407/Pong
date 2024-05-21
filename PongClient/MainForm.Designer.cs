@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            tabs = new TablessControl();
             tabPage1 = new TabPage();
             RepeatPasswordLabel = new Label();
             RepeatPassword = new TextBox();
@@ -52,18 +53,19 @@
             player1Score = new Label();
             ball = new PictureBox();
             tabPage3 = new TabPage();
-            statsPanel = new Panel();
-            ratioText = new Label();
-            ratioLabel = new Label();
-            lossesText = new Label();
-            lossesLabel = new Label();
-            winText = new Label();
-            winLabel = new Label();
             statsButton = new Button();
             welcomeMessage = new Label();
             startButton = new Button();
             gameTimer = new System.Windows.Forms.Timer(components);
             timer1 = new System.Windows.Forms.Timer(components);
+            statsPanel = new Panel();
+            winLabel = new Label();
+            ratioText = new Label();
+            ratioLabel = new Label();
+            lossesText = new Label();
+            lossesLabel = new Label();
+            winText = new Label();
+            tabs.SuspendLayout();
             tabPage1.SuspendLayout();
             tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)player2).BeginInit();
@@ -72,6 +74,18 @@
             tabPage3.SuspendLayout();
             statsPanel.SuspendLayout();
             SuspendLayout();
+            // 
+            // tabs
+            // 
+            tabs.Controls.Add(tabPage1);
+            tabs.Controls.Add(tabPage2);
+            tabs.Controls.Add(tabPage3);
+            tabs.Dock = DockStyle.Fill;
+            tabs.Location = new Point(0, 0);
+            tabs.Name = "tabs";
+            tabs.SelectedIndex = 0;
+            tabs.Size = new Size(984, 561);
+            tabs.TabIndex = 0;
             // 
             // tabPage1
             // 
@@ -99,7 +113,7 @@
             RepeatPasswordLabel.Font = new Font("Yu Gothic UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             RepeatPasswordLabel.Location = new Point(379, 253);
             RepeatPasswordLabel.Name = "RepeatPasswordLabel";
-            RepeatPasswordLabel.Size = new Size(165, 28);
+            RepeatPasswordLabel.Size = new Size(113, 17);
             RepeatPasswordLabel.TabIndex = 39;
             RepeatPasswordLabel.Text = "Repeat password:";
             // 
@@ -108,7 +122,7 @@
             RepeatPassword.BorderStyle = BorderStyle.None;
             RepeatPassword.Location = new Point(379, 273);
             RepeatPassword.Name = "RepeatPassword";
-            RepeatPassword.Size = new Size(219, 24);
+            RepeatPassword.Size = new Size(219, 16);
             RepeatPassword.TabIndex = 34;
             RepeatPassword.TextChanged += RepeatPassword_TextChanged;
             RepeatPassword.KeyPress += RepeatPassword_KeyPress;
@@ -119,7 +133,7 @@
             dontHaveAcc.Font = new Font("Yu Gothic UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             dontHaveAcc.Location = new Point(418, 441);
             dontHaveAcc.Name = "dontHaveAcc";
-            dontHaveAcc.Size = new Size(216, 28);
+            dontHaveAcc.Size = new Size(143, 17);
             dontHaveAcc.TabIndex = 38;
             dontHaveAcc.Text = "Don't have an account?";
             // 
@@ -129,7 +143,7 @@
             PasswordLabel.Font = new Font("Yu Gothic UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             PasswordLabel.Location = new Point(379, 192);
             PasswordLabel.Name = "PasswordLabel";
-            PasswordLabel.Size = new Size(98, 28);
+            PasswordLabel.Size = new Size(67, 17);
             PasswordLabel.TabIndex = 37;
             PasswordLabel.Text = "Password:";
             // 
@@ -140,7 +154,7 @@
             UsernameLabel.ForeColor = Color.Black;
             UsernameLabel.Location = new Point(379, 125);
             UsernameLabel.Name = "UsernameLabel";
-            UsernameLabel.Size = new Size(103, 28);
+            UsernameLabel.Size = new Size(70, 17);
             UsernameLabel.TabIndex = 36;
             UsernameLabel.Text = "Username:";
             // 
@@ -150,7 +164,7 @@
             Password.Location = new Point(379, 212);
             Password.Name = "Password";
             Password.PasswordChar = '*';
-            Password.Size = new Size(219, 24);
+            Password.Size = new Size(219, 16);
             Password.TabIndex = 35;
             Password.TextChanged += Password_TextChanged;
             Password.KeyPress += Password_KeyPress;
@@ -160,7 +174,7 @@
             Username.BorderStyle = BorderStyle.None;
             Username.Location = new Point(379, 146);
             Username.Name = "Username";
-            Username.Size = new Size(219, 24);
+            Username.Size = new Size(219, 16);
             Username.TabIndex = 33;
             Username.TextChanged += loginUsername_TextChanged;
             Username.KeyPress += Username_KeyPress;
@@ -205,7 +219,7 @@
             label1.ForeColor = Color.FromArgb(116, 86, 174);
             label1.Location = new Point(379, 37);
             label1.Name = "label1";
-            label1.Size = new Size(252, 60);
+            label1.Size = new Size(164, 40);
             label1.TabIndex = 30;
             label1.Text = "Get Started";
             // 
@@ -254,7 +268,7 @@
             queueLengthLabel.ForeColor = Color.DarkViolet;
             queueLengthLabel.Location = new Point(939, 25);
             queueLengthLabel.Name = "queueLengthLabel";
-            queueLengthLabel.Size = new Size(33, 40);
+            queueLengthLabel.Size = new Size(22, 25);
             queueLengthLabel.TabIndex = 21;
             queueLengthLabel.Text = "0";
             // 
@@ -265,7 +279,7 @@
             intervalLabel.ForeColor = Color.ForestGreen;
             intervalLabel.Location = new Point(44, 25);
             intervalLabel.Name = "intervalLabel";
-            intervalLabel.Size = new Size(33, 40);
+            intervalLabel.Size = new Size(22, 25);
             intervalLabel.TabIndex = 20;
             intervalLabel.Text = "0";
             // 
@@ -276,7 +290,7 @@
             delayLabel.ForeColor = Color.White;
             delayLabel.Location = new Point(465, 15);
             delayLabel.Name = "delayLabel";
-            delayLabel.Size = new Size(46, 55);
+            delayLabel.Size = new Size(32, 37);
             delayLabel.TabIndex = 19;
             delayLabel.Text = "0";
             // 
@@ -287,7 +301,7 @@
             waitingMsg.ForeColor = Color.White;
             waitingMsg.Location = new Point(3, 231);
             waitingMsg.Name = "waitingMsg";
-            waitingMsg.Size = new Size(1425, 128);
+            waitingMsg.Size = new Size(961, 86);
             waitingMsg.TabIndex = 18;
             waitingMsg.Text = "Waiting for player 2 to connect...";
             // 
@@ -298,7 +312,7 @@
             countdownLabel.ForeColor = Color.White;
             countdownLabel.Location = new Point(433, 197);
             countdownLabel.Name = "countdownLabel";
-            countdownLabel.Size = new Size(158, 191);
+            countdownLabel.Size = new Size(106, 128);
             countdownLabel.TabIndex = 17;
             countdownLabel.Text = "5";
             // 
@@ -309,7 +323,7 @@
             player2Score.ForeColor = Color.Magenta;
             player2Score.Location = new Point(274, 25);
             player2Score.Name = "player2Score";
-            player2Score.Size = new Size(38, 45);
+            player2Score.Size = new Size(25, 30);
             player2Score.TabIndex = 16;
             player2Score.Text = "0";
             // 
@@ -320,7 +334,7 @@
             player1Score.ForeColor = Color.Blue;
             player1Score.Location = new Point(663, 25);
             player1Score.Name = "player1Score";
-            player1Score.Size = new Size(38, 45);
+            player1Score.Size = new Size(25, 30);
             player1Score.TabIndex = 15;
             player1Score.Text = "0";
             // 
@@ -347,86 +361,6 @@
             tabPage3.Text = "tabPage3";
             tabPage3.UseVisualStyleBackColor = true;
             // 
-            // statsPanel
-            // 
-            statsPanel.Controls.Add(ratioText);
-            statsPanel.Controls.Add(ratioLabel);
-            statsPanel.Controls.Add(lossesText);
-            statsPanel.Controls.Add(lossesLabel);
-            statsPanel.Controls.Add(winText);
-            statsPanel.Controls.Add(winLabel);
-            statsPanel.Location = new Point(776, 3);
-            statsPanel.Name = "statsPanel";
-            statsPanel.Size = new Size(200, 530);
-            statsPanel.TabIndex = 6;
-            statsPanel.Visible = false;
-            // 
-            // ratioText
-            // 
-            ratioText.AutoSize = true;
-            ratioText.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            ratioText.Location = new Point(73, 299);
-            ratioText.Name = "ratioText";
-            ratioText.Size = new Size(64, 32);
-            ratioText.TabIndex = 7;
-            ratioText.Text = "0 / 0";
-            ratioText.Visible = false;
-            // 
-            // ratioLabel
-            // 
-            ratioLabel.AutoSize = true;
-            ratioLabel.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            ratioLabel.Location = new Point(32, 255);
-            ratioLabel.Name = "ratioLabel";
-            ratioLabel.Size = new Size(198, 32);
-            ratioLabel.TabIndex = 8;
-            ratioLabel.Text = "Win to loss ratio:";
-            ratioLabel.Visible = false;
-            // 
-            // lossesText
-            // 
-            lossesText.AutoSize = true;
-            lossesText.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lossesText.Location = new Point(84, 168);
-            lossesText.Name = "lossesText";
-            lossesText.Size = new Size(27, 32);
-            lossesText.TabIndex = 9;
-            lossesText.Text = "0";
-            lossesText.Visible = false;
-            // 
-            // lossesLabel
-            // 
-            lossesLabel.AutoSize = true;
-            lossesLabel.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lossesLabel.Location = new Point(32, 123);
-            lossesLabel.Name = "lossesLabel";
-            lossesLabel.Size = new Size(208, 32);
-            lossesLabel.TabIndex = 10;
-            lossesLabel.Text = "Number of losses:";
-            lossesLabel.Visible = false;
-            // 
-            // winText
-            // 
-            winText.AutoSize = true;
-            winText.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            winText.Location = new Point(84, 53);
-            winText.Name = "winText";
-            winText.Size = new Size(27, 32);
-            winText.TabIndex = 11;
-            winText.Text = "0";
-            winText.Visible = false;
-            // 
-            // winLabel
-            // 
-            winLabel.AutoSize = true;
-            winLabel.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            winLabel.Location = new Point(32, 20);
-            winLabel.Name = "winLabel";
-            winLabel.Size = new Size(193, 32);
-            winLabel.TabIndex = 0;
-            winLabel.Text = "Number of wins:";
-            winLabel.Visible = false;
-            // 
             // statsButton
             // 
             statsButton.ForeColor = Color.Black;
@@ -445,7 +379,7 @@
             welcomeMessage.ForeColor = Color.Black;
             welcomeMessage.Location = new Point(322, 198);
             welcomeMessage.Name = "welcomeMessage";
-            welcomeMessage.Size = new Size(442, 60);
+            welcomeMessage.Size = new Size(291, 40);
             welcomeMessage.TabIndex = 4;
             welcomeMessage.Text = "WELCOME TO PONG";
             // 
@@ -469,17 +403,98 @@
             // 
             timer1.Interval = 1000;
             // 
+            // statsPanel
+            // 
+            statsPanel.Controls.Add(ratioText);
+            statsPanel.Controls.Add(ratioLabel);
+            statsPanel.Controls.Add(lossesText);
+            statsPanel.Controls.Add(lossesLabel);
+            statsPanel.Controls.Add(winText);
+            statsPanel.Controls.Add(winLabel);
+            statsPanel.Location = new Point(776, 3);
+            statsPanel.Name = "statsPanel";
+            statsPanel.Size = new Size(200, 530);
+            statsPanel.TabIndex = 6;
+            statsPanel.Visible = false;
+            // 
+            // winLabel
+            // 
+            winLabel.AutoSize = true;
+            winLabel.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            winLabel.Location = new Point(32, 20);
+            winLabel.Name = "winLabel";
+            winLabel.Size = new Size(130, 21);
+            winLabel.TabIndex = 0;
+            winLabel.Text = "Number of wins:";
+            winLabel.Visible = false;
+            // 
+            // ratioText
+            // 
+            ratioText.AutoSize = true;
+            ratioText.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ratioText.Location = new Point(73, 299);
+            ratioText.Name = "ratioText";
+            ratioText.Size = new Size(43, 21);
+            ratioText.TabIndex = 7;
+            ratioText.Text = "0 / 0";
+            ratioText.Visible = false;
+            // 
+            // ratioLabel
+            // 
+            ratioLabel.AutoSize = true;
+            ratioLabel.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ratioLabel.Location = new Point(32, 255);
+            ratioLabel.Name = "ratioLabel";
+            ratioLabel.Size = new Size(132, 21);
+            ratioLabel.TabIndex = 8;
+            ratioLabel.Text = "Win to loss ratio:";
+            ratioLabel.Visible = false;
+            // 
+            // lossesText
+            // 
+            lossesText.AutoSize = true;
+            lossesText.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lossesText.Location = new Point(84, 168);
+            lossesText.Name = "lossesText";
+            lossesText.Size = new Size(19, 21);
+            lossesText.TabIndex = 9;
+            lossesText.Text = "0";
+            lossesText.Visible = false;
+            // 
+            // lossesLabel
+            // 
+            lossesLabel.AutoSize = true;
+            lossesLabel.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lossesLabel.Location = new Point(32, 123);
+            lossesLabel.Name = "lossesLabel";
+            lossesLabel.Size = new Size(142, 21);
+            lossesLabel.TabIndex = 10;
+            lossesLabel.Text = "Number of losses:";
+            lossesLabel.Visible = false;
+            // 
+            // winText
+            // 
+            winText.AutoSize = true;
+            winText.Font = new Font("Yu Gothic UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            winText.Location = new Point(84, 53);
+            winText.Name = "winText";
+            winText.Size = new Size(19, 21);
+            winText.TabIndex = 11;
+            winText.Text = "0";
+            winText.Visible = false;
+            // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1406, 935);
+            ClientSize = new Size(984, 561);
+            Controls.Add(tabs);
             FormBorderStyle = FormBorderStyle.FixedSingle;
-            Margin = new Padding(4, 5, 4, 5);
             Name = "MainForm";
             Text = "MainForm";
             KeyDown += OnKeyDown;
             KeyUp += OnKeyUp;
+            tabs.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
             tabPage2.ResumeLayout(false);
