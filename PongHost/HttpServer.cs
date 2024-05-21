@@ -9,7 +9,7 @@ using System.IO;
 using System.Web;
 
 //run cmd as administrator (rmb on cmd)
-//netsh http add urlacl url=http://*:8080/ user=Nataly
+//netsh http add urlacl url=http://*:8080/ user=Nataly (Natal for laptop)
 
 namespace PongHost
 {

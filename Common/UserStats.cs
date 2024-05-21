@@ -16,5 +16,7 @@ namespace Common
             this.gamesWon = gamesWon;
             this.gamesLost = gamesLost;
         }
+
+        
     }
 }

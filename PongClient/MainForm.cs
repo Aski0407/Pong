@@ -25,6 +25,7 @@ namespace PongClient
         private string username;
         private int wins;
         private int losses;
+        private UserStats userStats;
 
         enum tab
         {
@@ -66,6 +67,7 @@ namespace PongClient
                 this.username = Username.Text;
                 this.password = Password.Text;
                 client.Login(this.username, this.password);
+                tabs.SelectedIndex = (int)tab.stats;
             }
 
         }
@@ -228,6 +230,7 @@ namespace PongClient
         //STATS
         private void statsButton_Click(object sender, EventArgs e)
         {
+            ShowStats();
             winLabel.Visible = !winLabel.Visible;
             winText.Visible = !winText.Visible;
             lossesLabel.Visible = !lossesLabel.Visible;
@@ -237,16 +240,29 @@ namespace PongClient
         }
         internal UserStats GetStruct(string message)
         {
+            int wins = 0; int losses = 0;
             if (message != null)
             {
                 string[] parts = message.Split('-');
                 foreach (string part in parts)
                 {
-                    this.wins = part[0];
-                    this.losses = part[1];
+                    wins = part[0];
+                    wins = part[1];
                 }
             }
             return new UserStats(wins, losses);
         }
+
+
+        internal async void ShowStats()
+        {
+            UserStats stats = GetStruct(await this.client.GetStats(this.username));
+
+            winText.Text = stats.gamesWon.ToString();
+            lossesText.Text = stats.gamesLost.ToString();
+            ratioText.Text = winText.Text + "/" + lossesText.Text;
+        }
+
+        
     }
 }

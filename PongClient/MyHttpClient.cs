@@ -44,17 +44,27 @@ namespace PongClient
                 { username, password }
             };
             var content = new FormUrlEncodedContent(values);
-            await this.Post("register", content);
+            this.Post("register", content);
+        }
+
+        public async Task<string> GetStats(string username)
+        {
+            var values = new Dictionary<string, string>
+            {
+                { username, username }
+            };
+            var content = new FormUrlEncodedContent(values);
+            return await this.Get("stats", content);
         }
         
-        private async Task<string> Post(string uri, HttpContent content)
+        private async void Post(string uri, HttpContent content)
         {
-            //posts the request to the server. if it was successful, returns true, else false
+            //posts the request to the server. if it was successful, returns, else throws exception
             var response = await client.PostAsync(_url + uri, content);
             if(!response.IsSuccessStatusCode) {
                 throw new Exception("Error " + response.StatusCode);
             }
-            return await response.Content.ReadAsStringAsync();
+            return;
         }
 
         private async Task<string> Get(string uri, HttpContent content)
@@ -66,6 +76,7 @@ namespace PongClient
             }
             return await response.Content.ReadAsStringAsync();
         }
+        
 
     }
 

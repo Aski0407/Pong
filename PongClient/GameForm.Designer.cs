@@ -49,27 +49,30 @@
             // player1
             // 
             player1.BackColor = SystemColors.Desktop;
-            player1.Location = new Point(966, 197);
+            player1.Location = new Point(1380, 328);
+            player1.Margin = new Padding(4, 5, 4, 5);
             player1.Name = "player1";
-            player1.Size = new Size(15, 100);
+            player1.Size = new Size(21, 167);
             player1.TabIndex = 1;
             player1.TabStop = false;
             // 
             // player2
             // 
             player2.BackColor = Color.Plum;
-            player2.Location = new Point(1, 197);
+            player2.Location = new Point(1, 328);
+            player2.Margin = new Padding(4, 5, 4, 5);
             player2.Name = "player2";
-            player2.Size = new Size(15, 100);
+            player2.Size = new Size(21, 167);
             player2.TabIndex = 2;
             player2.TabStop = false;
             // 
             // ball
             // 
             ball.BackColor = Color.White;
-            ball.Location = new Point(493, 255);
+            ball.Location = new Point(704, 425);
+            ball.Margin = new Padding(4, 5, 4, 5);
             ball.Name = "ball";
-            ball.Size = new Size(15, 15);
+            ball.Size = new Size(21, 25);
             ball.TabIndex = 3;
             ball.TabStop = false;
             // 
@@ -83,9 +86,10 @@
             player1Score.AutoSize = true;
             player1Score.Font = new Font("Yu Gothic UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             player1Score.ForeColor = Color.Blue;
-            player1Score.Location = new Point(663, 25);
+            player1Score.Location = new Point(947, 42);
+            player1Score.Margin = new Padding(4, 0, 4, 0);
             player1Score.Name = "player1Score";
-            player1Score.Size = new Size(25, 30);
+            player1Score.Size = new Size(38, 45);
             player1Score.TabIndex = 4;
             player1Score.Text = "0";
             // 
@@ -94,9 +98,10 @@
             player2Score.AutoSize = true;
             player2Score.Font = new Font("Yu Gothic UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             player2Score.ForeColor = Color.Magenta;
-            player2Score.Location = new Point(274, 25);
+            player2Score.Location = new Point(391, 42);
+            player2Score.Margin = new Padding(4, 0, 4, 0);
             player2Score.Name = "player2Score";
-            player2Score.Size = new Size(25, 30);
+            player2Score.Size = new Size(38, 45);
             player2Score.TabIndex = 5;
             player2Score.Text = "0";
             // 
@@ -105,9 +110,10 @@
             countdownLabel.AutoSize = true;
             countdownLabel.Font = new Font("Yu Gothic UI", 72F, FontStyle.Regular, GraphicsUnit.Point, 0);
             countdownLabel.ForeColor = Color.White;
-            countdownLabel.Location = new Point(433, 197);
+            countdownLabel.Location = new Point(619, 328);
+            countdownLabel.Margin = new Padding(4, 0, 4, 0);
             countdownLabel.Name = "countdownLabel";
-            countdownLabel.Size = new Size(106, 128);
+            countdownLabel.Size = new Size(158, 191);
             countdownLabel.TabIndex = 7;
             countdownLabel.Text = "5";
             // 
@@ -116,9 +122,10 @@
             waitingMsg.AutoSize = true;
             waitingMsg.Font = new Font("Yu Gothic UI", 48F, FontStyle.Regular, GraphicsUnit.Point, 0);
             waitingMsg.ForeColor = Color.White;
-            waitingMsg.Location = new Point(12, 231);
+            waitingMsg.Location = new Point(17, 385);
+            waitingMsg.Margin = new Padding(4, 0, 4, 0);
             waitingMsg.Name = "waitingMsg";
-            waitingMsg.Size = new Size(961, 86);
+            waitingMsg.Size = new Size(1425, 128);
             waitingMsg.TabIndex = 8;
             waitingMsg.Text = "Waiting for player 2 to connect...";
             // 
@@ -127,9 +134,10 @@
             delayLabel.AutoSize = true;
             delayLabel.Font = new Font("Yu Gothic UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             delayLabel.ForeColor = Color.White;
-            delayLabel.Location = new Point(465, 15);
+            delayLabel.Location = new Point(664, 25);
+            delayLabel.Margin = new Padding(4, 0, 4, 0);
             delayLabel.Name = "delayLabel";
-            delayLabel.Size = new Size(32, 37);
+            delayLabel.Size = new Size(46, 55);
             delayLabel.TabIndex = 9;
             delayLabel.Text = "0";
             // 
@@ -138,9 +146,10 @@
             intervalLabel.AutoSize = true;
             intervalLabel.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             intervalLabel.ForeColor = Color.ForestGreen;
-            intervalLabel.Location = new Point(44, 25);
+            intervalLabel.Location = new Point(63, 42);
+            intervalLabel.Margin = new Padding(4, 0, 4, 0);
             intervalLabel.Name = "intervalLabel";
-            intervalLabel.Size = new Size(22, 25);
+            intervalLabel.Size = new Size(33, 40);
             intervalLabel.TabIndex = 10;
             intervalLabel.Text = "0";
             // 
@@ -149,9 +158,10 @@
             queueLengthLabel.AutoSize = true;
             queueLengthLabel.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             queueLengthLabel.ForeColor = Color.DarkViolet;
-            queueLengthLabel.Location = new Point(939, 25);
+            queueLengthLabel.Location = new Point(1341, 42);
+            queueLengthLabel.Margin = new Padding(4, 0, 4, 0);
             queueLengthLabel.Name = "queueLengthLabel";
-            queueLengthLabel.Size = new Size(22, 25);
+            queueLengthLabel.Size = new Size(33, 40);
             queueLengthLabel.TabIndex = 11;
             queueLengthLabel.Text = "0";
             // 
@@ -161,10 +171,10 @@
             // 
             // GameForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
-            ClientSize = new Size(984, 561);
+            ClientSize = new Size(1406, 935);
             Controls.Add(queueLengthLabel);
             Controls.Add(intervalLabel);
             Controls.Add(delayLabel);
@@ -176,6 +186,7 @@
             Controls.Add(player2);
             Controls.Add(player1);
             ForeColor = SystemColors.ControlText;
+            Margin = new Padding(4, 5, 4, 5);
             Name = "GameForm";
             Text = "PongGame";
             KeyDown += OnKeyDown;
