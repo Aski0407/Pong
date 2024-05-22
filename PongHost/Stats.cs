@@ -1,91 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Common;
 
 namespace PongHost
 {
-    internal class Stats
+    internal class Stats : FileHandler<UserStats>
     {
-        private Dictionary<string, UserStats> stats = new Dictionary<string, UserStats>(); //dictionary of users and their stats
-        private HttpServer server;
-        string file = "stats.csv";
-
-        public Stats()
+        public Stats() : base("stats.csv")
         {
-            ReadCsvToDictionary(file);
         }
-        internal void SerializeData() //used to create and update the file
+
+        protected override void RowToEntry(string row)
         {
-            if (stats != null)
+            var values = row.Split(',');
+
+            // Assuming the CSV file has three columns: Username, Games Won, Games Lost
+            if (values.Length == 3)
             {
-                WriteDictionaryToCsv(file, stats);
+                string username = values[0];
+                int gamesWon = int.Parse(values[1]);
+                int gamesLost = int.Parse(values[2]);
+
+                var userStats = new UserStats(gamesWon, gamesLost);
+                data[username] = userStats;
             }
         }
-
-        internal void ReadCsvToDictionary(string file)
-        //makes the csv file into a dictionary 
+        protected override string EntryToRow(KeyValuePair<string, UserStats> entry)
+        //creates and updated the file
         {
-            this.stats = new Dictionary<string, UserStats>();
-            if (File.Exists(file))
-            {
-                try
-                {
-                    using (StreamReader reader = new StreamReader(file))
-                    {
-                        // Read each line
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            var values = line.Split(',');
-
-                            // Assuming the CSV file has three columns: Username, Games Won, Games Lost
-                            if (values.Length == 3)
-                            {
-                                string username = values[0];
-                                int gamesWon = int.Parse(values[1]);
-                                int gamesLost = int.Parse(values[2]);
-
-                                var userStats = new UserStats(gamesWon, gamesLost);
-                                stats[username] = userStats;
-                            }
-                        }
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error reading user data: {ex.Message}", "Error");
-                }
-
-
-            }
+            return $"{entry.Key},{entry.Value.gamesWon},{entry.Value.gamesLost}";
         }
-        internal string GetStructAsString(string username)
+
+        internal string GetStructAsString(string payload)
         {
-            UserStats user = this.stats[username];
+            Dictionary<string, string> userPass = HttpServer.DecodeFormData(payload);
+            string username = userPass.Values.First();
+            UserStats user = this.data[username];
 
             return user.gamesWon + "-" + user.gamesLost;
         }
-        internal void WriteDictionaryToCsv(string file, Dictionary<string, UserStats> dictionary)
-        //receives the file path, the dictionary with the stats struct
-        {
-            using (StreamWriter writer = new StreamWriter(file))
-            {
-                foreach (var pair in dictionary)
-                {
-                    writer.WriteLine($"{pair.Key},{pair.Value.gamesWon},{pair.Value.gamesLost}");
-                }
 
-            }
+        internal void CreateNewEntry(string username)
+        {
+            data.Add(username, new UserStats(0, 0)); //defaults at 0
+            SerializeData();
+        }
+
+        public void UpdateEntry(string username, int wonChange, int lostChange)
+        {
+            UserStats userStats = data[username];
+            userStats.gamesWon += wonChange;
+            userStats.gamesLost += lostChange;
+            SerializeData();
         }
     }
-
-
-
 }
 
 

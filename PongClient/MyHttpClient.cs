@@ -27,44 +27,45 @@ namespace PongClient
             this._url = serverUrl;
         }
 
-        public void Login(string username, string password) //sends user's username and password
+        public async Task Login(string username, string password) //sends user's username and password
         {
             var values = new Dictionary<string, string>
             {
                 { username, password }
             };
             var content = new FormUrlEncodedContent(values);
-            this.Post("login", content);
+            await this.Post("login", content);
         }
 
-        public async void Register(string username, string password)
+        public async Task Register(string username, string password)
         {
             var values = new Dictionary<string, string>
             {
                 { username, password }
             };
             var content = new FormUrlEncodedContent(values);
-            this.Post("register", content);
+            await this.Post("register", content);
         }
 
         public async Task<string> GetStats(string username)
         {
             var values = new Dictionary<string, string>
             {
-                { username, username }
+                { "username", username }
             };
             var content = new FormUrlEncodedContent(values);
             return await this.Get("stats", content);
         }
         
-        private async void Post(string uri, HttpContent content)
+        private async Task Post(string uri, HttpContent content)
         {
             //posts the request to the server. if it was successful, returns, else throws exception
             var response = await client.PostAsync(_url + uri, content);
-            if(!response.IsSuccessStatusCode) {
-                throw new Exception("Error " + response.StatusCode);
+            if(!response.IsSuccessStatusCode) 
+            {
+                throw new Exception(response.Content.ToString());
             }
-            return;
+            
         }
 
         private async Task<string> Get(string uri, HttpContent content)

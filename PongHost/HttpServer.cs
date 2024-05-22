@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Web;
+using System.Threading;
 
 //run cmd as administrator (rmb on cmd)
 //netsh http add urlacl url=http://*:8080/ user=Nataly (Natal for laptop)
@@ -15,20 +11,23 @@ namespace PongHost
 {
     internal class HttpServer
     {
-        private Users Users;
-        private Stats Stats;
+        private Users users = new Users();
+        internal Stats stats = new Stats();
         public HttpServer()
         {
-            this.Users = new Users();
+            this.users = new Users();
             try
             {
-                RunServer();
+                Thread serverThread = new Thread(new ThreadStart(RunServer));
+                serverThread.Name = "HTTP Server";
+                serverThread.Start();
             }
-            catch (Exception e){
+            catch (Exception e)
+            {
                 Console.WriteLine(e.ToString());
             }
         }
-        internal Task RunServer()
+        internal void RunServer()
         {
             string url = "http://*:8080/";
             HttpListener listener = new HttpListener();
@@ -57,15 +56,15 @@ namespace PongHost
             switch (path)
             {
                 case "/login":
-                    if (this.Users.Login(data)) { SendResponse(response, null); Console.WriteLine("received: " + request); } //the username ans passowrd are correct
-                    else { SendResponse(response, null, HttpStatusCode.Forbidden); } //the username or password are not correct
+                    if (this.users.Login(data)) { SendResponse(response, null); Console.WriteLine("received: " + request); } //the username ans passowrd are correct
+                    else { SendResponse(response, null, HttpStatusCode.Unauthorized); } //the username or password are not correct
                     break;
                 case "/register":
-                    if (this.Users.Register(data)) { SendResponse(response, null); Console.WriteLine("received: " + request); }
-                    else { SendResponse(response, null, HttpStatusCode.Forbidden); }
+                    if (Register(data)) { SendResponse(response, null); Console.WriteLine("received: " + request); }
+                    else { SendResponse(response, "Username already registered", HttpStatusCode.BadRequest); }
                     break;
                 case "/stats":
-                    SendResponse(response, Stats.GetStructAsString(data)); //should receive username only
+                    SendResponse(response, stats.GetStructAsString(data)); //should receive username only
                     break;
                 default:
                     SendResponse(response, "Page not found", statusCode: HttpStatusCode.NotFound);
@@ -91,7 +90,38 @@ namespace PongHost
             response.OutputStream.Close();
         }
 
+        internal bool Register(string payload)
+        //receives the username and password, returns true if registered, returns false if the username is taken
+        {
+            Dictionary<string, string> userPass = DecodeFormData(payload);
+            string username = userPass.Keys.First();
+            string password = userPass[username];
+            if (users.AddUser(username, password))
+            {
+                stats.CreateNewEntry(username);
+                return true;
+            }
+            return false;
 
+        }
+        internal static Dictionary<string, string> DecodeFormData(string encodedFormData)
+        {
+            var decodedData = new Dictionary<string, string>();
+
+            string[] pairs = encodedFormData.Split('&');
+            foreach (string pair in pairs)
+            {
+                string[] keyValue = pair.Split('=');
+                if (keyValue.Length == 2)
+                {
+                    string key = Uri.UnescapeDataString(keyValue[0]);
+                    string value = Uri.UnescapeDataString(keyValue[1]);
+                    decodedData[key] = value;
+                }
+            }
+
+            return decodedData;
+        }
 
         public string GetRequestPostData(HttpListenerRequest request)
         {

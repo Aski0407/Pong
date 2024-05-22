@@ -10,13 +10,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Common;
+using System.Configuration;
 
 namespace PongClient
 {
     public partial class MainForm : Form
     {
         NetworkClient NetworkClient;
-        private MyHttpClient client;
+        private MyHttpClient client = new MyHttpClient("http://" + ConfigurationManager.AppSettings["IP"] + ":8080/");
         int counter = 200;
         private bool GameStarted = false;
         private bool SentKeyDown = false;
@@ -39,13 +40,15 @@ namespace PongClient
             Protocol class1 = new Protocol();
             tabs.SelectedIndex = (int)tab.login;
             gameTimer.Interval = 5;
-            this.NetworkClient = new NetworkClient(System.Configuration.ConfigurationManager.AppSettings["IP"], int.Parse(System.Configuration.ConfigurationManager.AppSettings["Port"]));
-            gameTimer.Enabled = true;
+            this.NetworkClient = new NetworkClient(System.Configuration.ConfigurationManager.AppSettings["IP"], int.Parse(System.Configuration.ConfigurationManager.AppSettings["TcpPort"]));
+            gameTimer.Enabled = false;
         }
 
         //LOGIN/REGISTER    
-        private void LoginButton_Click(object sender, EventArgs e) //what happens when the user clicks the login button (top one)
+        private async void LoginButton_Click(object sender, EventArgs e) //what happens when the user clicks the login button (top one)
         {
+            this.username = Username.Text;
+            this.password = Password.Text;
             //describes what happens when the user presses the login button. if its set to login, sends the username and password to be checked. if its set to register
             if (Username.Text == null || Password.Text == null)
             {
@@ -59,15 +62,35 @@ namespace PongClient
                     MessageBox.Show("password have to be identical");
                     return;
                 }
-                else { this.client.Register(Username.Text, Password.Text); }
+                else
+                {
+                    try
+                    {
+                        await this.client.Register(this.username, this.password);
+                        tabs.SelectedIndex = (int)tab.stats;
+                        NetworkClient.Send(username);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Registration failed, please try again\n" + ex.Message);
+                    }
+                }
 
             }
             else
             {
-                this.username = Username.Text;
-                this.password = Password.Text;
-                client.Login(this.username, this.password);
-                tabs.SelectedIndex = (int)tab.stats;
+
+                try
+                {
+                    await client.Login(this.username, this.password);
+                    tabs.SelectedIndex = (int)tab.stats;
+                    NetworkClient.Send(username);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Login failed, please try again\n" + ex.Message);
+                }
             }
 
         }
@@ -79,13 +102,17 @@ namespace PongClient
                 this.isLogin = false;
                 RepeatPassword.Show();
                 RepeatPasswordLabel.Show();
-                RegisterButton.Text = "Login";
+                RegisterButton.Text = "LOGIN";
+                LoginButton.Text = "REGISTER";
                 dontHaveAcc.Text = "Don't have an account?";
             }
-            else
+            else 
             {
                 this.isLogin = true;
-                LoginButton.Text = "Register";
+                RepeatPassword.Hide();
+                RepeatPasswordLabel.Hide();
+                LoginButton.Text = "LOGIN";
+                RegisterButton.Text = "REGISTER";
                 dontHaveAcc.Text = "Already have an account?";
             }
 
@@ -208,13 +235,18 @@ namespace PongClient
                 if (currentFrame.Score1 == 10)
                 {
                     gameTimer.Stop();
-                    MessageBox.Show("player1 wins, player2 lost");
+                    MessageBox.Show("player 1 won, player 2 lost");
+                    tabs.SelectedIndex = (int)tab.stats;
+                    NetworkClient.Send("WIN");
                 }
 
                 if (currentFrame.Score2 == 10)
                 {
                     gameTimer.Stop();
-                    MessageBox.Show("player2 wins, player1 lost");
+                    MessageBox.Show("player 2 won, player 1 lost");
+                    tabs.SelectedIndex = (int)tab.stats;
+                    NetworkClient.Send("LOSS");
+
                 }
             }
             else
@@ -231,6 +263,7 @@ namespace PongClient
         private void statsButton_Click(object sender, EventArgs e)
         {
             ShowStats();
+            statsPanel.Visible = !statsPanel.Visible;
             winLabel.Visible = !winLabel.Visible;
             winText.Visible = !winText.Visible;
             lossesLabel.Visible = !lossesLabel.Visible;
@@ -244,11 +277,8 @@ namespace PongClient
             if (message != null)
             {
                 string[] parts = message.Split('-');
-                foreach (string part in parts)
-                {
-                    wins = part[0];
-                    wins = part[1];
-                }
+                    wins = int.Parse(parts[0]);
+                    losses = int.Parse(parts[1]);
             }
             return new UserStats(wins, losses);
         }
@@ -257,12 +287,15 @@ namespace PongClient
         internal async void ShowStats()
         {
             UserStats stats = GetStruct(await this.client.GetStats(this.username));
-
             winText.Text = stats.gamesWon.ToString();
             lossesText.Text = stats.gamesLost.ToString();
             ratioText.Text = winText.Text + "/" + lossesText.Text;
         }
 
-        
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            tabs.SelectedIndex = (int)tab.game;
+            gameTimer.Enabled = true;
+        }
     }
 }

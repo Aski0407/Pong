@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 using Common;
 using System.Timers;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Policy;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Remoting.Messaging;
 using System.Configuration;
 
 namespace PongHost
@@ -27,15 +16,16 @@ namespace PongHost
 
     internal class PongServer
     {
-
         private Player player1, player2;
         private TcpListener listener;
         private int port = int.Parse(ConfigurationManager.AppSettings["Port"]);
         private Field field = new Field();
         private bool debug = bool.Parse(ConfigurationManager.AppSettings["Debug"]);
-        private HttpServer httpServer = new HttpServer();
+        private HttpServer httpServer;
+
         public PongServer()
         {
+            httpServer = new HttpServer();
             listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
             while (true)
@@ -105,10 +95,9 @@ namespace PongHost
 
         }
 
-
         private Racket GetPlayerBySide(PlayerSide side)
         {
-            return side == PlayerSide.One ? this.field.player1 : this.field.player2; //checks if the side is One, if true first clause, if false second
+            return side == PlayerSide.One ? this.field.player1 : this.field.player2; //checks if the side is One, if true - first clause, if false second
         }
 
 
@@ -123,10 +112,16 @@ namespace PongHost
             this.GetPlayerBySide(side).movement = Movement.Down;
 
         }
+
         public void Stop(PlayerSide side)
         {
             this.GetPlayerBySide(side).movement = Movement.None;
 
+        }
+        
+        public void UpdateStats(string username, int wonChange, int lostChange)
+        {
+            httpServer.stats.UpdateEntry(username, wonChange, lostChange);
         }
 
         public void OnClientDisconnect(PlayerSide side)

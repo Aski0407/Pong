@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Sockets;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Xml;
 using Common;
 
 namespace PongHost
@@ -24,6 +17,7 @@ namespace PongHost
         private BinaryReader reader;
         private BinaryWriter writer;
         private BlockingCollection<Data> outputQueue = new BlockingCollection<Data>();
+        public string username;
 
         public Player(PongServer server, TcpClient client, PlayerSide p)
         {
@@ -109,6 +103,15 @@ namespace PongHost
             {
                 server.Stop(this.p);
             }
+            else if (command.Equals("WIN"))
+            {
+                server.UpdateStats(this.username, 1, 0);
+            }
+            else if (command.Equals("LOSS"))
+            {
+                server.UpdateStats(this.username, 0, 1);
+            }
+            else { this.username = command; }
 
         }
 
@@ -119,7 +122,7 @@ namespace PongHost
 
     }
 
-   
+
 }
 
 

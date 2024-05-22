@@ -1,14 +1,5 @@
 ﻿using Common;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace PongHost
 {
@@ -18,7 +9,7 @@ namespace PongHost
         Up,
         Down
     }
-
+    
 
     internal class Rectangle //the object for the players & ball
     {
@@ -61,6 +52,7 @@ namespace PongHost
         internal Random rand = new Random(); //to determine balls initial direction
         internal int speed = 15; // influences the speed of the player's paddle movement
         internal int[] j = { 7, 9, 8, 6, 10, 12, 11 }; //might randomize ball speed
+        private Stats stats = new Stats();
 
         public Field()
         {
@@ -162,7 +154,7 @@ namespace PongHost
                 // then bounce the ball in the other direction, randomizing the speed
                 WhenCollision(this.ball);
             }
-            //Console.WriteLine("p1 = " + this.player1.Top + "p2 = " + this.player2.Top);
+            
             return new Data(this.player1.Top, this.player2.Top, this.ball.Left, this.ball.Top, this.score1, this.score2);
         }
 
