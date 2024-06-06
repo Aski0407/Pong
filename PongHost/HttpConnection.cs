@@ -2,20 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
+using Common;
 
 //run cmd as administrator (rmb on cmd)
 //netsh http add urlacl url=http://*:8080/ user=Nataly (Natal for laptop)
 
 namespace PongHost
 {
-    internal class HttpServer
+    internal class HttpConnection
     {
-        private Users users = new Users();
-        internal Stats stats = new Stats();
-        public HttpServer()
+
+        private PongServer server;
+
+        public HttpConnection(PongServer server)
         {
-            this.users = new Users();
+            this.server = server;
             try
             {
                 Thread serverThread = new Thread(new ThreadStart(RunServer));
@@ -27,6 +31,7 @@ namespace PongHost
                 Console.WriteLine(e.ToString());
             }
         }
+
         internal void RunServer()
         {
             string url = "http://*:8080/";
@@ -48,7 +53,6 @@ namespace PongHost
             HttpListenerRequest request = context.Request;
             HttpListenerResponse response = context.Response;
 
-
             string path = request.Url.AbsolutePath;
 
             string data = GetRequestPostData(request);
@@ -56,7 +60,7 @@ namespace PongHost
             switch (path)
             {
                 case "/login":
-                    if (this.users.Login(data)) { SendResponse(response, null); Console.WriteLine("received: " + request); } //the username ans passowrd are correct
+                    if (server.users.Login(data)) { SendResponse(response, null); Console.WriteLine("received: " + request); } //the username ans passowrd are correct
                     else { SendResponse(response, null, HttpStatusCode.Unauthorized); } //the username or password are not correct
                     break;
                 case "/register":
@@ -64,20 +68,22 @@ namespace PongHost
                     else { SendResponse(response, "Username already registered", HttpStatusCode.BadRequest); }
                     break;
                 case "/stats":
-                    SendResponse(response, stats.GetStructAsString(data)); //should receive username only
+                    string username = request.QueryString["username"];
+                    SendResponse(response, server.stats.GetStructAsString(username)); //should receive username only
                     break;
                 default:
                     SendResponse(response, "Page not found", statusCode: HttpStatusCode.NotFound);
                     break;
             }
         }
+
         internal void SendResponse(HttpListenerResponse response, string content, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
-            //sends the response to the client 
+            //sends the response to the client
             if (content != null)
             {
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(content);
-                response.ContentType = "text/plain";
+                byte[] buffer = Encoding.UTF8.GetBytes(content);
+                response.ContentType = "application/octet-stream";
                 response.StatusCode = (int)statusCode;
                 response.ContentLength64 = buffer.Length;
                 response.OutputStream.Write(buffer, 0, buffer.Length);
@@ -94,11 +100,15 @@ namespace PongHost
         //receives the username and password, returns true if registered, returns false if the username is taken
         {
             Dictionary<string, string> userPass = DecodeFormData(payload);
-            string username = userPass.Keys.First();
-            string password = userPass[username];
-            if (users.AddUser(username, password))
+            string usernameCrypt = userPass.Keys.First();
+            string passwordCrypt = userPass[usernameCrypt];
+            byte[] usernameByte = Convert.FromBase64String(usernameCrypt);
+            byte[] passwordByte = Convert.FromBase64String(passwordCrypt);
+            string username = Cryptography.Decrypt(usernameByte);
+            string password = Cryptography.Decrypt(passwordByte);
+            if (server.users.AddUser(username, password))
             {
-                stats.CreateNewEntry(username);
+                server.stats.CreateNewEntry(username);
                 return true;
             }
             return false;
@@ -138,6 +148,7 @@ namespace PongHost
                 }
             }
         }
+
     }
 }
 

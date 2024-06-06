@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PongHost
 {
+
     internal abstract class FileHandler<T>
     {
         protected Dictionary<string, T> data = new Dictionary<string, T>();
@@ -18,6 +16,7 @@ namespace PongHost
             this.file = file;
             if (File.Exists(file))
             {
+                Console.WriteLine("started reading " + file);
                 //load all data from the file
                 using (var stream = File.OpenText(file))
                 {
@@ -28,12 +27,18 @@ namespace PongHost
                     }
                 }
             }
+            Console.WriteLine("finished reading " + file);
         }
 
         protected void SerializeData() //used to create and update the file
         {
-            File.WriteAllLines(file,
-                data.Select(EntryToRow).ToArray());
+            lock (this)
+            {
+                Console.WriteLine("started writing to file " + file);
+                File.WriteAllLines(file,
+                    data.Select(EntryToRow).ToArray());
+                Console.WriteLine("finished writing " + file);
+            }
         }
 
         protected abstract string EntryToRow(KeyValuePair<string, T> entry);

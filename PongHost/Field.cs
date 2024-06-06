@@ -9,7 +9,7 @@ namespace PongHost
         Up,
         Down
     }
-    
+
 
     internal class Rectangle //the object for the players & ball
     {
@@ -45,25 +45,25 @@ namespace PongHost
         internal int ballY = 5; // vertical Y speed value for the ball object
         internal int score1 = 0; //player1 score
         internal int score2 = 0; //player2 score
-        internal int clientWidth = 1000; //the width of the screen
-        internal int clientHeight = 600; //the height of the screen
+        internal int clientWidth = 976; //the width of the screen
+        internal int clientHeight = 533; //the height of the screen
         internal int maxTop = 1;
         internal int minTop = 458; //client height - player height
-        internal Random rand = new Random(); //to determine balls initial direction
+        internal Random rand = new Random(); //to determine balls initial direction after collision
         internal int speed = 15; // influences the speed of the player's paddle movement
-        internal int[] j = { 7, 9, 8, 6, 10, 12, 11 }; //might randomize ball speed
-        private Stats stats = new Stats();
+        internal int[] randSpeed = { 7, 8, 9, 10, 11, 12, 13 }; //might randomize ball speed
 
         public Field()
         {
-
         }
 
         private bool Intersects(Rectangle r1, Rectangle r2)
         {
-            // Check if the rectangles intersect by checking if one rectangle's
-            // left edge is to the right of the other rectangle's right edge
-            // or vice versa, and similarly for top/bottom edges
+            /* 
+             * Check if the rectangles intersect by checking if one rectangle's
+            ** left edge is to the right of the other rectangle's right edge
+            ** or vice versa, and similarly for top/bottom edges
+            **/
             bool intersectX = (r1.Left < r2.Right && r1.Right > r2.Left);
             bool intersectY = (r1.Top < r2.Bottom && r1.Bottom > r2.Top);
 
@@ -73,8 +73,8 @@ namespace PongHost
 
         private void WhenCollision(Rectangle ball)
         {
-            int x = j[rand.Next(j.Length)]; //randomizes speeds on both axes 
-            int y = j[rand.Next(j.Length)];
+            int x = randSpeed[rand.Next(randSpeed.Length)]; //randomizes speeds on both axes 
+            int y = randSpeed[rand.Next(randSpeed.Length)];
             if (this.ballX < 0)
             {
                 this.ballX = x; //changing the direction of the ball
@@ -124,10 +124,11 @@ namespace PongHost
             if (this.ball.Left < 0) //player 1 scored a point
             {
                 //then
-                this.ball.Left = 255; // reset the ball to the middle of the screen
+                this.ball.Left = 493; // reset the ball to the middle of the screen
+                this.ball.Top = 255;
                 this.ballX = -this.ballX; // change the balls direction
-                this.ballX -= 2; // increase the speed
                 this.score1++;
+                
 
             }
             // if the ball has gone past the right through player1
@@ -135,10 +136,11 @@ namespace PongHost
             if (this.ball.Left + this.ball.Width > this.clientWidth)
             {
                 // then
-                this.ball.Left = 255;  // set the ball to centre of the screen
+                this.ball.Left = 493;  // set the ball to centre of the screen
+                this.ball.Top = 255;
                 this.ballX = -this.ballX; // change the direction of the ball
-                this.ballX += 2; // increase the speed of the ball
                 this.score2++; // add one to the players score
+                
             }
             //controlling the ball
             // if the ball either reachers the top of the screen or the bottom
@@ -154,7 +156,7 @@ namespace PongHost
                 // then bounce the ball in the other direction, randomizing the speed
                 WhenCollision(this.ball);
             }
-            
+
             return new Data(this.player1.Top, this.player2.Top, this.ball.Left, this.ball.Top, this.score1, this.score2);
         }
 

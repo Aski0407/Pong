@@ -4,7 +4,7 @@ using System.Text;
 namespace Common
 {
 
-    public class Data //object to send to the server
+    public class Data //object to send from the server
     {
         public int Player1; //top
         public int Player2; //top
@@ -23,7 +23,7 @@ namespace Common
             this.BallTop = ballTop;
             this.Score1 = score1;
             this.Score2 = score2;
-            this.timeStamp = DateTime.Now; //timestamp
+            //this.timeStamp = DateTime.Now; //timestamp
 
         }
         //constructs using the command string 
@@ -53,8 +53,8 @@ namespace Common
                         this.Score1 = int.Parse(value); break;
                     case Protocol.Score2:
                         this.Score2 = int.Parse(value); break;
-                    case Protocol.TimeStamp:
-                        this.timeStamp = new DateTime(long.Parse(value)); break;
+                   // case Protocol.TimeStamp:
+                     //   this.timeStamp = new DateTime(long.Parse(value)); break;
                         
 
                 }
@@ -78,7 +78,7 @@ namespace Common
             this.Append(sb, Protocol.BallTop, this.BallTop);
             this.Append(sb, Protocol.Score1, this.Score1);
             this.Append(sb, Protocol.Score2, this.Score2);
-            this.Append(sb, Protocol.TimeStamp, this.timeStamp.Ticks);
+           // this.Append(sb, Protocol.TimeStamp, this.timeStamp.Ticks);
 
             return sb.ToString();
         }

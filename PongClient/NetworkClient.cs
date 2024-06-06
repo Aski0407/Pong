@@ -1,13 +1,12 @@
-﻿using System.Text;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using Common;
-using System.Windows.Forms;
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
+using System.Xml.Serialization;
 
 namespace PongClient
 {
-    //type of commands that can be sent
-
 
     public class NetworkClient
     {
@@ -18,13 +17,13 @@ namespace PongClient
         private BinaryReader reader;
         private BinaryWriter writer;
 
-        //network client constructor 
         public NetworkClient(string serverIP, int port)
         {
             client = new TcpClient(serverIP, port); //connects client
             stream = this.client.GetStream();
             reader = new BinaryReader(stream);
             writer = new BinaryWriter(stream);
+            writer.Write(Cryptography.PublicKey);
             StartReceiving();
         }
 
@@ -36,7 +35,8 @@ namespace PongClient
 
         void StartReceiving()
         {
-            Console.WriteLine("Connected to server!");
+            string sKey = reader.ReadString();
+            Cryptography.InitializeEncryption(sKey);
             new Thread(() => //opens new thread to manage reading the info from the server
             {
                 Thread.CurrentThread.IsBackground = true;
@@ -44,9 +44,11 @@ namespace PongClient
                 {
                     try
                     {
-                        string response = this.reader.ReadString();
-                        Data frame = new Data(response);
-                        Debug.WriteLine("delay reading from server = " + ((DateTime.Now.Ticks - frame.timeStamp.Ticks) / TimeSpan.TicksPerMillisecond));
+                        int length = reader.ReadInt32();
+                        byte[] message = reader.ReadBytes(length);
+                        string decrypted = Cryptography.Decrypt(message);
+                        Data frame = new Data(decrypted);
+                        //Debug.WriteLine("delay reading from server = " + ((DateTime.Now.Ticks - frame.timeStamp.Ticks) / TimeSpan.TicksPerMillisecond));
                         queue.Enqueue(frame);
                     }
                     catch (Exception e)
@@ -57,11 +59,12 @@ namespace PongClient
                 }
             }).Start();
         }
-
-      
+        
         public void Send(string message)
         {
-            this.writer.Write(message);
+            byte[] encrypted = Cryptography.Encrypt(message);
+            writer.Write(encrypted.Length); //sends the length of the array 
+            writer.Write(encrypted);
         }
     }
 }

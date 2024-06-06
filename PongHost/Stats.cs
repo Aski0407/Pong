@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Common;
 
 namespace PongHost
@@ -10,7 +9,7 @@ namespace PongHost
         {
         }
 
-        protected override void RowToEntry(string row)
+        protected override void RowToEntry(string row) //takes a row from the file and converts it to a value in the dictionary 
         {
             var values = row.Split(',');
 
@@ -25,18 +24,15 @@ namespace PongHost
                 data[username] = userStats;
             }
         }
+
         protected override string EntryToRow(KeyValuePair<string, UserStats> entry)
-        //creates and updated the file
         {
             return $"{entry.Key},{entry.Value.gamesWon},{entry.Value.gamesLost}";
         }
 
-        internal string GetStructAsString(string payload)
+        internal string GetStructAsString(string username)
         {
-            Dictionary<string, string> userPass = HttpServer.DecodeFormData(payload);
-            string username = userPass.Values.First();
             UserStats user = this.data[username];
-
             return user.gamesWon + "-" + user.gamesLost;
         }
 
@@ -46,11 +42,12 @@ namespace PongHost
             SerializeData();
         }
 
-        public void UpdateEntry(string username, int wonChange, int lostChange)
+        internal void UpdateEntry(string username, int wonChange, int lostChange)
         {
             UserStats userStats = data[username];
             userStats.gamesWon += wonChange;
             userStats.gamesLost += lostChange;
+            data[username] = userStats;
             SerializeData();
         }
     }
