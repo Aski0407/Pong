@@ -45,12 +45,10 @@
             welcomeMessage = new Label();
             startButton = new Button();
             tabPage2 = new TabPage();
+            panel1 = new Panel();
+            player1 = new PictureBox();
             waitingMsg = new Label();
             player2 = new PictureBox();
-            player1 = new PictureBox();
-            queueLengthLabel = new Label();
-            intervalLabel = new Label();
-            delayLabel = new Label();
             countdownLabel = new Label();
             player2Score = new Label();
             player1Score = new Label();
@@ -71,8 +69,9 @@
             tabPage3.SuspendLayout();
             statsPanel.SuspendLayout();
             tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)player2).BeginInit();
+            panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)player1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)player2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ball).BeginInit();
             tabPage1.SuspendLayout();
             tabs.SuspendLayout();
@@ -81,7 +80,7 @@
             // gameTimer
             // 
             gameTimer.Interval = 1000;
-            gameTimer.Tick += TimerTick;
+            gameTimer.Tick += GameTimer_Tick;
             // 
             // timer1
             // 
@@ -111,7 +110,7 @@
             statsButton.TabIndex = 13;
             statsButton.Text = "view stats";
             statsButton.UseVisualStyleBackColor = true;
-            statsButton.Click += statsButton_Click;
+            statsButton.Click += StatsButton_Click;
             // 
             // statsPanel
             // 
@@ -137,7 +136,7 @@
             closeButton.Size = new Size(22, 22);
             closeButton.TabIndex = 12;
             closeButton.UseVisualStyleBackColor = true;
-            closeButton.Click += closeButton_Click;
+            closeButton.Click += CloseButton_Click;
             // 
             // lossesLabel
             // 
@@ -231,12 +230,9 @@
             // tabPage2
             // 
             tabPage2.BackColor = Color.Black;
+            tabPage2.Controls.Add(panel1);
             tabPage2.Controls.Add(waitingMsg);
             tabPage2.Controls.Add(player2);
-            tabPage2.Controls.Add(player1);
-            tabPage2.Controls.Add(queueLengthLabel);
-            tabPage2.Controls.Add(intervalLabel);
-            tabPage2.Controls.Add(delayLabel);
             tabPage2.Controls.Add(countdownLabel);
             tabPage2.Controls.Add(player2Score);
             tabPage2.Controls.Add(player1Score);
@@ -248,14 +244,34 @@
             tabPage2.TabIndex = 1;
             tabPage2.Text = "tabPage2";
             // 
+            // panel1
+            // 
+            panel1.BackColor = Color.Transparent;
+            panel1.Controls.Add(player1);
+            panel1.Dock = DockStyle.Right;
+            panel1.Location = new Point(957, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(16, 527);
+            panel1.TabIndex = 23;
+            // 
+            // player1
+            // 
+            player1.BackColor = Color.SlateBlue;
+            player1.Location = new Point(0, 194);
+            player1.Name = "player1";
+            player1.Size = new Size(15, 100);
+            player1.TabIndex = 1;
+            player1.TabStop = false;
+            // 
             // waitingMsg
             // 
             waitingMsg.AutoSize = true;
-            waitingMsg.Font = new Font("Yu Gothic UI", 48F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            waitingMsg.BackColor = Color.Black;
+            waitingMsg.Font = new Font("Yu Gothic UI", 47F, FontStyle.Regular, GraphicsUnit.Point, 0);
             waitingMsg.ForeColor = Color.DarkMagenta;
-            waitingMsg.Location = new Point(8, 223);
+            waitingMsg.Location = new Point(22, 221);
             waitingMsg.Name = "waitingMsg";
-            waitingMsg.Size = new Size(961, 86);
+            waitingMsg.Size = new Size(938, 85);
             waitingMsg.TabIndex = 22;
             waitingMsg.Text = "Waiting for player 2 to connect...";
             // 
@@ -267,48 +283,6 @@
             player2.Size = new Size(15, 100);
             player2.TabIndex = 13;
             player2.TabStop = false;
-            // 
-            // player1
-            // 
-            player1.BackColor = SystemColors.Desktop;
-            player1.Location = new Point(961, 197);
-            player1.Name = "player1";
-            player1.Size = new Size(15, 100);
-            player1.TabIndex = 1;
-            player1.TabStop = false;
-            // 
-            // queueLengthLabel
-            // 
-            queueLengthLabel.AutoSize = true;
-            queueLengthLabel.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            queueLengthLabel.ForeColor = Color.DarkViolet;
-            queueLengthLabel.Location = new Point(939, 25);
-            queueLengthLabel.Name = "queueLengthLabel";
-            queueLengthLabel.Size = new Size(22, 25);
-            queueLengthLabel.TabIndex = 21;
-            queueLengthLabel.Text = "0";
-            // 
-            // intervalLabel
-            // 
-            intervalLabel.AutoSize = true;
-            intervalLabel.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            intervalLabel.ForeColor = Color.ForestGreen;
-            intervalLabel.Location = new Point(44, 25);
-            intervalLabel.Name = "intervalLabel";
-            intervalLabel.Size = new Size(22, 25);
-            intervalLabel.TabIndex = 20;
-            intervalLabel.Text = "0";
-            // 
-            // delayLabel
-            // 
-            delayLabel.AutoSize = true;
-            delayLabel.Font = new Font("Yu Gothic UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            delayLabel.ForeColor = Color.White;
-            delayLabel.Location = new Point(465, 15);
-            delayLabel.Name = "delayLabel";
-            delayLabel.Size = new Size(32, 37);
-            delayLabel.TabIndex = 19;
-            delayLabel.Text = "0";
             // 
             // countdownLabel
             // 
@@ -325,8 +299,8 @@
             // 
             player2Score.AutoSize = true;
             player2Score.Font = new Font("Yu Gothic UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            player2Score.ForeColor = Color.Magenta;
-            player2Score.Location = new Point(274, 25);
+            player2Score.ForeColor = Color.Plum;
+            player2Score.Location = new Point(93, 39);
             player2Score.Name = "player2Score";
             player2Score.Size = new Size(25, 30);
             player2Score.TabIndex = 16;
@@ -335,9 +309,10 @@
             // player1Score
             // 
             player1Score.AutoSize = true;
+            player1Score.BackColor = Color.Black;
             player1Score.Font = new Font("Yu Gothic UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            player1Score.ForeColor = Color.Blue;
-            player1Score.Location = new Point(663, 25);
+            player1Score.ForeColor = Color.SlateBlue;
+            player1Score.Location = new Point(860, 39);
             player1Score.Name = "player1Score";
             player1Score.Size = new Size(25, 30);
             player1Score.TabIndex = 15;
@@ -513,7 +488,7 @@
             // 
             countdownTimer.Enabled = true;
             countdownTimer.Interval = 1000;
-            countdownTimer.Tick += countdownTimer_Tick;
+            countdownTimer.Tick += CountdownTimer_Tick;
             // 
             // MainForm
             // 
@@ -532,8 +507,9 @@
             statsPanel.PerformLayout();
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)player2).EndInit();
+            panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)player1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)player2).EndInit();
             ((System.ComponentModel.ISupportInitialize)ball).EndInit();
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
@@ -556,9 +532,6 @@
         private TabPage tabPage2;
         private PictureBox player2;
         private PictureBox player1;
-        private Label queueLengthLabel;
-        private Label intervalLabel;
-        private Label delayLabel;
         private Label countdownLabel;
         private Label player2Score;
         private Label player1Score;
@@ -580,5 +553,6 @@
         private Panel statsPanel;
         private Button closeButton;
         private System.Windows.Forms.Timer countdownTimer;
+        private Panel panel1;
     }
 }

@@ -1,7 +1,5 @@
 ﻿using Common;
 using System.Configuration;
-using System.Text;
-using System.Web;
 
 namespace PongClient
 {
@@ -9,27 +7,33 @@ namespace PongClient
     {
         NetworkClient NetworkClient;
         private MyHttpClient client = new MyHttpClient("http://" + ConfigurationManager.AppSettings["IP"] + ":8080/");
-        int counter = 5;
+        private int counter = 5;
         private bool GameStarted = false;
         private bool SentKeyDown = false;
         private bool isLogin = true; //changes to false if the user presses on register
         private string username;
         private string password;
 
-
-
-        enum tab
+        enum Tab
         {
             login = 0, game = 1, stats = 2
         }
+
         public MainForm()
         {
             InitializeComponent();
             RepeatPassword.Hide(); //defaults login
             RepeatPasswordLabel.Hide();
-            tabs.SelectedIndex = (int)tab.login;
+            tabs.SelectedIndex = (int)Tab.login;
             gameTimer.Interval = 5;
-            this.NetworkClient = new NetworkClient(ConfigurationManager.AppSettings["IP"], int.Parse(ConfigurationManager.AppSettings["TcpPort"]));
+            try
+            {
+                this.NetworkClient = new NetworkClient(ConfigurationManager.AppSettings["IP"], int.Parse(ConfigurationManager.AppSettings["TcpPort"]));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error occured", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             gameTimer.Enabled = false;
             countdownTimer.Enabled = false;
             this.KeyPreview = true;
@@ -50,7 +54,7 @@ namespace PongClient
             {
                 if (this.Password.Text != this.RepeatPassword.Text)
                 {
-                    MessageBox.Show("password have to be identical");
+                    MessageBox.Show("passwords have to be identical");
                     return;
                 }
                 else
@@ -58,7 +62,7 @@ namespace PongClient
                     try
                     {
                         await this.client.Register(this.username, this.password);
-                        tabs.SelectedIndex = (int)tab.stats;
+                        tabs.SelectedIndex = (int)Tab.stats;
                         NetworkClient.Send("username=" + username);
                     }
                     catch (Exception ex)
@@ -74,7 +78,7 @@ namespace PongClient
                 try
                 {
                     await client.Login(this.username, this.password);
-                    tabs.SelectedIndex = (int)tab.stats;
+                    tabs.SelectedIndex = (int)Tab.stats;
                     NetworkClient.Send("username=" + username);
 
                 }
@@ -190,7 +194,7 @@ namespace PongClient
             }
         }
 
-        private void TimerTick(object sender, EventArgs e)
+        private void GameTimer_Tick(object sender, EventArgs e)
         {
             if (GameStarted)
             {
@@ -207,7 +211,7 @@ namespace PongClient
                 }
 
                 Data currentFrame = this.NetworkClient.NextFrame; //gets the Data 
-                                                                  // this is the main timer event, this event will trigger every 40 milliseconds
+                                                                  // this is the main timer event, this event will trigger every 5 milliseconds
                 player1Score.Text = "" + currentFrame.Score1; // show player score on label 1
                 player2Score.Text = "" + currentFrame.Score2; // show player score on label 2
 
@@ -227,14 +231,14 @@ namespace PongClient
                 {
                     gameTimer.Stop();
                     MessageBox.Show("player 1 won, player 2 lost");
-                    tabs.SelectedIndex = (int)tab.stats;
+                    tabs.SelectedIndex = (int)Tab.stats;
                 }
 
                 if (player2Score.Text == "10")
                 {
                     gameTimer.Stop();
                     MessageBox.Show("player 2 won, player 1 lost");
-                    tabs.SelectedIndex = (int)tab.stats;
+                    tabs.SelectedIndex = (int)Tab.stats;
                 }
             }
             else
@@ -245,7 +249,7 @@ namespace PongClient
                 }
             }
         }
-        private void countdownTimer_Tick(object sender, EventArgs e)
+        private void CountdownTimer_Tick(object sender, EventArgs e)
         {
             if (counter-- == 0)
             {
@@ -303,18 +307,18 @@ namespace PongClient
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            tabs.SelectedIndex = (int)tab.game;
+            tabs.SelectedIndex = (int)Tab.game;
             NetworkClient.Send("START");
             ResetBoard();
             gameTimer.Start();
         }
 
-        private void closeButton_Click(object sender, EventArgs e)
+        private void CloseButton_Click(object sender, EventArgs e)
         {
             statsPanel.Visible = false;
         }
 
-        private void statsButton_Click(object sender, EventArgs e)
+        private void StatsButton_Click(object sender, EventArgs e)
         {
             ShowStats();
             statsPanel.Visible = true;

@@ -11,8 +11,8 @@ namespace PongHost
         private bool debug = bool.Parse(ConfigurationManager.AppSettings["Debug"]);
         private bool pressedStart = false;
         private PongServer server;
-        public Player player1, player2;
-        Timer timer = new Timer(20);
+        internal Player player1, player2;
+        private Timer timer = new Timer(20);
 
         internal Game(PongServer server)
         {

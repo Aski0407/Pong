@@ -12,7 +12,7 @@ namespace Common
         public int BallTop;
         public int Score1;
         public int Score2;
-        public DateTime timeStamp;
+        //public DateTime timeStamp;
 
 
         public Data(int player1, int player2, int ballLeft, int ballTop, int score1, int score2)
@@ -55,13 +55,11 @@ namespace Common
                         this.Score2 = int.Parse(value); break;
                    // case Protocol.TimeStamp:
                      //   this.timeStamp = new DateTime(long.Parse(value)); break;
-                        
-
                 }
             }
         }
 
-        private void Append(StringBuilder sb, string key, long value)
+        private void Append(StringBuilder sb, string key, int value)
         {
             sb.Append(key);
             sb.Append(Protocol.KeyValueDelimiter);

@@ -1,9 +1,5 @@
 ﻿using System.Net.Sockets;
 using Common;
-using System.Diagnostics;
-using System.Security.Cryptography;
-using System.Text;
-using System.Xml.Serialization;
 
 namespace PongClient
 {
@@ -27,13 +23,13 @@ namespace PongClient
             StartReceiving();
         }
 
-        public int QueueLength { get { return queue.Count; } }
+        internal int QueueLength { get { return queue.Count; } }
 
 
-        public Data NextFrame { get { return queue.Dequeue(); } }
+        internal Data NextFrame { get { return queue.Dequeue(); } }
 
 
-        void StartReceiving()
+        private void StartReceiving()
         {
             string sKey = reader.ReadString();
             Cryptography.InitializeEncryption(sKey);
@@ -59,8 +55,8 @@ namespace PongClient
                 }
             }).Start();
         }
-        
-        public void Send(string message)
+
+        internal void Send(string message)
         {
             byte[] encrypted = Cryptography.Encrypt(message);
             writer.Write(encrypted.Length); //sends the length of the array 

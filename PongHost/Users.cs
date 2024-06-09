@@ -1,8 +1,6 @@
 ﻿using Common;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Common;
 using System;
 
 namespace PongHost
@@ -10,7 +8,6 @@ namespace PongHost
     internal class Users : FileHandler<string>
     {
         internal HashSet<string> connectedUsers = new HashSet<string>();
-        private HttpConnection connection;
         public Users() : base("users.txt")
         {
         }

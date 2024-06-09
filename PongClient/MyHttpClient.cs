@@ -18,7 +18,7 @@ namespace PongClient
             this._url = serverUrl;
         }
 
-        public async Task Login(string username, string password) //sends user's username and password
+        internal async Task Login(string username, string password) //sends user's username and password
         {
             string hashPass = HashString(password);
             byte[] encryptedUserByte = Cryptography.Encrypt(username);
@@ -33,10 +33,10 @@ namespace PongClient
             await this.Post("login", content);
         }
 
-        public async Task Register(string username, string password)
+        internal async Task Register(string username, string password)
         {
             string hashPass = HashString(password);
-            byte[] encryptedUserByte = Cryptography.Encrypt(password);
+            byte[] encryptedUserByte = Cryptography.Encrypt(username);
             byte[] encryptedPassByte = Cryptography.Encrypt(hashPass);
             string encryptedUser = Convert.ToBase64String(encryptedUserByte);
             string encryptedHashPass = Convert.ToBase64String(encryptedPassByte);
@@ -48,7 +48,7 @@ namespace PongClient
             await this.Post("register", content);
         }
 
-        public async Task<string> GetStats(string username)
+        internal async Task<string> GetStats(string username)
         {
             byte[] message =  await this.Get("stats?username=" + username);
             return Encoding.UTF8.GetString(message);
@@ -65,7 +65,7 @@ namespace PongClient
 
         }
 
-        public async Task<byte[]> Get(string uri)
+        private async Task<byte[]> Get(string uri)
         {
             using HttpResponseMessage response = await client.GetAsync(_url + uri);
             if (!response.IsSuccessStatusCode)

@@ -3,9 +3,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Net.Sockets;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
-using System.Xml.Serialization;
 using Common;
 
 namespace PongHost
@@ -44,12 +42,6 @@ namespace PongHost
                         Data board = outputQueue.Take();
                         string message = board.ToString();
                         byte[] encrypted = Cryptography.Encrypt(message, encryptProvider);
-                        Console.WriteLine(message);
-                        //long delay = (DateTime.Now.Ticks - board.timeStamp.Ticks) / TimeSpan.TicksPerMillisecond;
-                        //if (delay > 200)
-                        //{
-                        //  Console.WriteLine("DELAY: " + delay);
-                        //}
                         writer.Write(encrypted.Length);
                         writer.Write(encrypted);
                     }
@@ -109,6 +101,7 @@ namespace PongHost
                     break;
 
                 case "NONE":
+                    //sends that the movement has stopped
                     this.game.Stop(this.p);
                     break;
 
@@ -117,7 +110,7 @@ namespace PongHost
                     break;
 
                 default:
-                    //"username="))
+                    //username
                     string[] parts = command.Split('=');
                     this.username = parts[1];
                     break;

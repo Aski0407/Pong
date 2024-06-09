@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using Common;
@@ -17,7 +16,7 @@ namespace PongHost
 
         private PongServer server;
 
-        public HttpConnection(PongServer server)
+        internal HttpConnection(PongServer server)
         {
             this.server = server;
             try
@@ -32,7 +31,7 @@ namespace PongHost
             }
         }
 
-        internal void RunServer()
+        private void RunServer()
         {
             string url = "http://*:8080/";
             HttpListener listener = new HttpListener();
@@ -47,7 +46,7 @@ namespace PongHost
             }
         }
 
-        internal void HandleRequest(HttpListenerContext context)
+        private void HandleRequest(HttpListenerContext context)
         {
             //will receive a string in the form of "http//(address)/login?[username]\r\n[password]"
             HttpListenerRequest request = context.Request;
@@ -77,7 +76,7 @@ namespace PongHost
             }
         }
 
-        internal void SendResponse(HttpListenerResponse response, string content, HttpStatusCode statusCode = HttpStatusCode.OK)
+        private void SendResponse(HttpListenerResponse response, string content, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             //sends the response to the client
             if (content != null)
@@ -96,7 +95,7 @@ namespace PongHost
             response.OutputStream.Close();
         }
 
-        internal bool Register(string payload)
+        private bool Register(string payload)
         //receives the username and password, returns true if registered, returns false if the username is taken
         {
             Dictionary<string, string> userPass = DecodeFormData(payload);
@@ -115,6 +114,7 @@ namespace PongHost
 
         }
         internal static Dictionary<string, string> DecodeFormData(string encodedFormData)
+            //receives the form url encoded string, and decodes it into a dictionary. returns the dictionary
         {
             var decodedData = new Dictionary<string, string>();
 
@@ -133,7 +133,7 @@ namespace PongHost
             return decodedData;
         }
 
-        public string GetRequestPostData(HttpListenerRequest request)
+        private string GetRequestPostData(HttpListenerRequest request)
         {
             //receives the request url, returns the body of the request
             if (!request.HasEntityBody)
