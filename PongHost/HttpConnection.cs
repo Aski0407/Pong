@@ -16,7 +16,7 @@ namespace PongHost
 
         private PongServer server;
 
-        internal HttpConnection(PongServer server)
+        internal HttpConnection(PongServer server) //constructor. receives the server. begins running the server
         {
             this.server = server;
             try
@@ -31,7 +31,7 @@ namespace PongHost
             }
         }
 
-        private void RunServer()
+        private void RunServer() //sets the server url. listens for connections and handles the requests
         {
             string url = "http://*:8080/";
             HttpListener listener = new HttpListener();
@@ -46,7 +46,7 @@ namespace PongHost
             }
         }
 
-        private void HandleRequest(HttpListenerContext context)
+        private void HandleRequest(HttpListenerContext context) //will receive the context (both request and response objects) 
         {
             //will receive a string in the form of "http//(address)/login?[username]\r\n[password]"
             HttpListenerRequest request = context.Request;
@@ -56,7 +56,7 @@ namespace PongHost
 
             string data = GetRequestPostData(request);
 
-            switch (path)
+            switch (path) //performs different actions depending on the request path
             {
                 case "/login":
                     if (server.users.Login(data)) { SendResponse(response, null); Console.WriteLine("received: " + request); } //the username ans passowrd are correct

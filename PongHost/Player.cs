@@ -48,6 +48,8 @@ namespace PongHost
                     catch (Exception ex)
                     {
                         Console.WriteLine("Exception in sender: {0}", ex);
+                        if (this.p == PlayerSide.One) { this.game.player1 = null; }
+                        else if (this.p == PlayerSide.Two) { this.game.player2 = null; }
                     }
                 }
             }))
@@ -119,6 +121,7 @@ namespace PongHost
 
 
         }
+
 
         internal void Send(Data message)
         {

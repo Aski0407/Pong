@@ -11,12 +11,12 @@ namespace Common
         public static string PublicKey { get; private set; }
         private static readonly string privateKey;
 
-        static Cryptography()
+        static Cryptography() //constructor. creates new provider and keys
         {
             rsaDecrypt = new RSACryptoServiceProvider(2048);
-            PublicKey = Convert.ToBase64String(rsaDecrypt.ExportCspBlob(false)); // Export the public key
-            privateKey = Convert.ToBase64String(rsaDecrypt.ExportCspBlob(true)); // Export the private key
-            rsaDecrypt.ImportCspBlob(Convert.FromBase64String(privateKey)); // Import the private key
+            PublicKey = Convert.ToBase64String(rsaDecrypt.ExportCspBlob(false)); // export the public key
+            privateKey = Convert.ToBase64String(rsaDecrypt.ExportCspBlob(true)); // export the private key
+            rsaDecrypt.ImportCspBlob(Convert.FromBase64String(privateKey)); // import the private key for the decryption provider
         }
 
         public static RSACryptoServiceProvider CreateProvider(string publicKey)//the public key of the other party
@@ -31,21 +31,21 @@ namespace Common
             rsaEncrypt = CreateProvider(publicKey);
         }
 
-        public static byte[] Encrypt(string data)
+        public static byte[] Encrypt(string data) 
         {
-            return Cryptography.Encrypt(data, rsaEncrypt);
+            return Cryptography.Encrypt(data, rsaEncrypt);// encrypt the data using OAEP padding (available only on windows XP or later)
         }
 
-        public static byte[] Encrypt(string data, RSACryptoServiceProvider provider)
+        public static byte[] Encrypt(string data, RSACryptoServiceProvider provider) 
+        // an override of the encrypt method. receives both the data and the provider with which to encrypt (used in the server where there are multiple encryption keys)
         {
             var dataBytes = Encoding.UTF8.GetBytes(data);
-            var encryptedBytes = provider.Encrypt(dataBytes, true); // Encrypt the data using OAEP padding
-            return encryptedBytes;
+            return provider.Encrypt(dataBytes, true); 
         }
 
         public static string Decrypt(byte[] encryptedData)
         {
-            var decryptedBytes = rsaDecrypt.Decrypt(encryptedData, true); // Decrypt the data using OAEP padding
+            var decryptedBytes = rsaDecrypt.Decrypt(encryptedData, true);// decrypt the data using OAEP padding (available only on windows XP or later)
             return Encoding.UTF8.GetString(decryptedBytes);
         }
 

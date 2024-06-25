@@ -13,7 +13,7 @@ namespace PongClient
         private BinaryReader reader;
         private BinaryWriter writer;
 
-        public NetworkClient(string serverIP, int port)
+        public NetworkClient(string serverIP, int port) //constructor. receives the ip of the server and the port to which the client should connect. creates a new tcp client, stream, reader and writer. sends the public key
         {
             client = new TcpClient(serverIP, port); //connects client
             stream = this.client.GetStream();
@@ -29,9 +29,9 @@ namespace PongClient
         internal Data NextFrame { get { return queue.Dequeue(); } }
 
 
-        private void StartReceiving()
+        private void StartReceiving() 
         {
-            string sKey = reader.ReadString();
+            string sKey = reader.ReadString(); //receives the server key first
             Cryptography.InitializeEncryption(sKey);
             new Thread(() => //opens new thread to manage reading the info from the server
             {
@@ -44,8 +44,7 @@ namespace PongClient
                         byte[] message = reader.ReadBytes(length);
                         string decrypted = Cryptography.Decrypt(message);
                         Data frame = new Data(decrypted);
-                        //Debug.WriteLine("delay reading from server = " + ((DateTime.Now.Ticks - frame.timeStamp.Ticks) / TimeSpan.TicksPerMillisecond));
-                        queue.Enqueue(frame);
+                        queue.Enqueue(frame); //puts the frame in the queue
                     }
                     catch (Exception e)
                     {
@@ -56,7 +55,7 @@ namespace PongClient
             }).Start();
         }
 
-        internal void Send(string message)
+        internal void Send(string message) //sends encrypted messages
         {
             byte[] encrypted = Cryptography.Encrypt(message);
             writer.Write(encrypted.Length); //sends the length of the array 

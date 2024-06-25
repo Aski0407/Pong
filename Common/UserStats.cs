@@ -1,6 +1,6 @@
 ﻿namespace Common
 {
-    public struct UserStats
+    public struct UserStats //the struct for the scores of the players. contains the wins and losses.
     {
         public int gamesWon;
         public int gamesLost;

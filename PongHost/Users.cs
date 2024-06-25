@@ -7,8 +7,8 @@ namespace PongHost
 {
     internal class Users : FileHandler<string>
     {
-        internal HashSet<string> connectedUsers = new HashSet<string>();
-        public Users() : base("users.txt")
+        internal HashSet<string> connectedUsers = new HashSet<string>(); //sets cant have duplicates! hash makes sorting easier (finding if it already exists there)
+        public Users() : base("users.txt") //empty constructor. summons the base constructor
         {
         }
 

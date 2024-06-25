@@ -20,7 +20,7 @@ namespace PongHost
         internal Stats stats = new Stats();
         Game pendingGame;
 
-        public PongServer()
+        public PongServer() //constructor. listens for connections and handles them
         {
             listener = new TcpListener(IPAddress.Any, port);
             HttpConnection connection = new HttpConnection(this);
@@ -33,9 +33,9 @@ namespace PongHost
             }
         }
 
-        private void HandleConnection(TcpClient client)
+        private void HandleConnection(TcpClient client) //receives the client who connected and assigns it to a game
         {
-            if (this.pendingGame == null)
+            if (this.pendingGame == null) //if there is no game, creates it and assigns the client as player1
             {
                 pendingGame = new Game(this);
                 Player player1 = new Player(this, client, PlayerSide.One); //player class instance
@@ -43,14 +43,14 @@ namespace PongHost
                 Console.WriteLine("First player connected");
                 return;
             }
-            if (pendingGame != null && pendingGame.player1 == null)
+            if (pendingGame != null && pendingGame.player1 == null) //if there is a game and player1 is null, assigns the client as player 1
             {
                 Player player1 = new Player(this, client, PlayerSide.One); //player class instance
                 pendingGame.AddPlayer(player1);
                 Console.WriteLine("First player connected");
                 return;
             }
-            if (pendingGame != null && pendingGame.player1 != null)
+            if (pendingGame != null && pendingGame.player1 != null) //if there is a game and player 1 isnt null, assigns the client as player2
             {
                 pendingGame.AddPlayer(new Player(this, client, PlayerSide.Two));
                 Console.WriteLine("Second player connected");
@@ -60,7 +60,7 @@ namespace PongHost
         }
 
 
-        public static void Main(String[] args)
+        public static void Main(String[] args) //main method. creates a new server
         {
             new PongServer();
         }

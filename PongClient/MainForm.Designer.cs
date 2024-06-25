@@ -45,6 +45,8 @@
             welcomeMessage = new Label();
             startButton = new Button();
             tabPage2 = new TabPage();
+            player2Username = new Label();
+            player1Username = new Label();
             panel1 = new Panel();
             player1 = new PictureBox();
             waitingMsg = new Label();
@@ -63,7 +65,7 @@
             UsernameLabel = new Label();
             RegisterButton = new Button();
             LoginButton = new Button();
-            label1 = new Label();
+            getStartedLabel = new Label();
             tabs = new TablessControl();
             countdownTimer = new System.Windows.Forms.Timer(components);
             tabPage3.SuspendLayout();
@@ -98,17 +100,17 @@
             tabPage3.Padding = new Padding(3);
             tabPage3.Size = new Size(976, 533);
             tabPage3.TabIndex = 2;
-            tabPage3.Text = "tabPage3";
+            tabPage3.Text = "Stats";
             tabPage3.UseVisualStyleBackColor = true;
             // 
             // statsButton
             // 
             statsButton.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            statsButton.Location = new Point(372, 336);
+            statsButton.Location = new Point(397, 327);
             statsButton.Name = "statsButton";
             statsButton.Size = new Size(178, 53);
             statsButton.TabIndex = 13;
-            statsButton.Text = "view stats";
+            statsButton.Text = "View Stats";
             statsButton.UseVisualStyleBackColor = true;
             statsButton.Click += StatsButton_Click;
             // 
@@ -206,30 +208,33 @@
             // 
             // welcomeMessage
             // 
-            welcomeMessage.AutoSize = true;
+            welcomeMessage.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             welcomeMessage.Font = new Font("Yu Gothic UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             welcomeMessage.ForeColor = Color.Black;
-            welcomeMessage.Location = new Point(326, 198);
+            welcomeMessage.Location = new Point(-4, 162);
             welcomeMessage.Name = "welcomeMessage";
-            welcomeMessage.Size = new Size(291, 40);
+            welcomeMessage.Size = new Size(980, 40);
             welcomeMessage.TabIndex = 4;
             welcomeMessage.Text = "WELCOME TO PONG";
+            welcomeMessage.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // startButton
             // 
             startButton.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             startButton.ForeColor = SystemColors.ControlText;
-            startButton.Location = new Point(372, 241);
+            startButton.Location = new Point(397, 236);
             startButton.Name = "startButton";
             startButton.Size = new Size(178, 53);
             startButton.TabIndex = 3;
-            startButton.Text = "start game";
+            startButton.Text = "Start Game";
             startButton.UseVisualStyleBackColor = true;
             startButton.Click += StartButton_Click;
             // 
             // tabPage2
             // 
             tabPage2.BackColor = Color.Black;
+            tabPage2.Controls.Add(player2Username);
+            tabPage2.Controls.Add(player1Username);
             tabPage2.Controls.Add(panel1);
             tabPage2.Controls.Add(waitingMsg);
             tabPage2.Controls.Add(player2);
@@ -242,7 +247,27 @@
             tabPage2.Padding = new Padding(3);
             tabPage2.Size = new Size(976, 533);
             tabPage2.TabIndex = 1;
-            tabPage2.Text = "tabPage2";
+            tabPage2.Text = "Game";
+            // 
+            // player2Username
+            // 
+            player2Username.AutoSize = true;
+            player2Username.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            player2Username.ForeColor = Color.Plum;
+            player2Username.Location = new Point(93, 14);
+            player2Username.Name = "player2Username";
+            player2Username.Size = new Size(0, 25);
+            player2Username.TabIndex = 25;
+            // 
+            // player1Username
+            // 
+            player1Username.AutoSize = true;
+            player1Username.Font = new Font("Yu Gothic UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            player1Username.ForeColor = Color.SlateBlue;
+            player1Username.Location = new Point(854, 16);
+            player1Username.Name = "player1Username";
+            player1Username.Size = new Size(0, 25);
+            player1Username.TabIndex = 24;
             // 
             // panel1
             // 
@@ -339,13 +364,13 @@
             tabPage1.Controls.Add(UsernameLabel);
             tabPage1.Controls.Add(RegisterButton);
             tabPage1.Controls.Add(LoginButton);
-            tabPage1.Controls.Add(label1);
+            tabPage1.Controls.Add(getStartedLabel);
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
             tabPage1.Size = new Size(976, 533);
             tabPage1.TabIndex = 0;
-            tabPage1.Text = "tabPage1";
+            tabPage1.Text = "Login";
             tabPage1.UseVisualStyleBackColor = true;
             // 
             // Username
@@ -459,17 +484,17 @@
             LoginButton.UseVisualStyleBackColor = false;
             LoginButton.Click += LoginButton_Click;
             // 
-            // label1
+            // getStartedLabel
             // 
-            label1.AutoSize = true;
-            label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Yu Gothic UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.ForeColor = Color.FromArgb(116, 86, 174);
-            label1.Location = new Point(379, 37);
-            label1.Name = "label1";
-            label1.Size = new Size(164, 40);
-            label1.TabIndex = 30;
-            label1.Text = "Get Started";
+            getStartedLabel.AutoSize = true;
+            getStartedLabel.BackColor = Color.Transparent;
+            getStartedLabel.Font = new Font("Yu Gothic UI", 21.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            getStartedLabel.ForeColor = Color.FromArgb(116, 86, 174);
+            getStartedLabel.Location = new Point(379, 37);
+            getStartedLabel.Name = "getStartedLabel";
+            getStartedLabel.Size = new Size(164, 40);
+            getStartedLabel.TabIndex = 30;
+            getStartedLabel.Text = "Get Started";
             // 
             // tabs
             // 
@@ -498,11 +523,10 @@
             Controls.Add(tabs);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "MainForm";
-            Text = "MainForm";
+            Text = "Pong";
             KeyDown += OnKeyDown;
             KeyUp += OnKeyUp;
             tabPage3.ResumeLayout(false);
-            tabPage3.PerformLayout();
             statsPanel.ResumeLayout(false);
             statsPanel.PerformLayout();
             tabPage2.ResumeLayout(false);
@@ -544,7 +568,7 @@
         private Label UsernameLabel;
         private Button RegisterButton;
         private Button LoginButton;
-        private Label label1;
+        private Label getStartedLabel;
         private TablessControl tabs;
         private Label waitingMsg;
         private TextBox Password;
@@ -554,5 +578,7 @@
         private Button closeButton;
         private System.Windows.Forms.Timer countdownTimer;
         private Panel panel1;
+        private Label player2Username;
+        private Label player1Username;
     }
 }

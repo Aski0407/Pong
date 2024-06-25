@@ -9,7 +9,7 @@ namespace PongClient
         private static readonly HttpClient client = new HttpClient();
         private string _url; //server url
 
-        public MyHttpClient(string serverUrl)
+        public MyHttpClient(string serverUrl) //constructor. receives the serverl url and assigns its value. 
         {
             if (!serverUrl.EndsWith("/"))
             {
@@ -20,7 +20,7 @@ namespace PongClient
 
         internal async Task Login(string username, string password) //sends user's username and password
         {
-            string hashPass = HashString(password);
+            string hashPass = HashString(password); //hashes the password
             byte[] encryptedUserByte = Cryptography.Encrypt(username);
             byte[] encryptedPassByte = Cryptography.Encrypt(hashPass);
             string encryptedUser = Convert.ToBase64String(encryptedUserByte);
@@ -29,13 +29,13 @@ namespace PongClient
             {
                 { encryptedUser, encryptedHashPass }
             };
-            var content = new FormUrlEncodedContent(values);
+            var content = new FormUrlEncodedContent(values); //encodes the key value pair into form url encoded content encoding
             await this.Post("login", content);
         }
 
-        internal async Task Register(string username, string password)
+        internal async Task Register(string username, string password) //sends the user's password and username
         {
-            string hashPass = HashString(password);
+            string hashPass = HashString(password); //hashes the password
             byte[] encryptedUserByte = Cryptography.Encrypt(username);
             byte[] encryptedPassByte = Cryptography.Encrypt(hashPass);
             string encryptedUser = Convert.ToBase64String(encryptedUserByte);
@@ -44,11 +44,11 @@ namespace PongClient
             {
                 { encryptedUser, encryptedHashPass }
             };
-            var content = new FormUrlEncodedContent(values);
+            var content = new FormUrlEncodedContent(values); //encodes the key value pair into form url encoded content encoding
             await this.Post("register", content);
         }
 
-        internal async Task<string> GetStats(string username)
+        internal async Task<string> GetStats(string username) //receives the username of the player and sends a get request for the stats string. sends the username as a query
         {
             byte[] message =  await this.Get("stats?username=" + username);
             return Encoding.UTF8.GetString(message);
@@ -65,7 +65,7 @@ namespace PongClient
 
         }
 
-        private async Task<byte[]> Get(string uri)
+        private async Task<byte[]> Get(string uri) //receives the request url and posts a get request. should receive the content, if not successful throws exception.
         {
             using HttpResponseMessage response = await client.GetAsync(_url + uri);
             if (!response.IsSuccessStatusCode)

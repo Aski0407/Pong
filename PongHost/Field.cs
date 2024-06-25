@@ -33,7 +33,7 @@ namespace PongHost
     {
         public Movement movement { get; set; }
 
-        public Racket(int width, int height, int left, int top) : base(width, height, left, top) { }
+        public Racket(int width, int height, int left, int top) : base(width, height, left, top) { } //constructor 
     }
 
     internal class Field
@@ -53,7 +53,7 @@ namespace PongHost
         internal int speed = 15; // influences the speed of the player's paddle movement
         internal int[] randSpeed = { 7, 8, 9, 10, 11, 12, 13 }; //might randomize ball speed
 
-        public Field()
+        public Field() //empty constructor
         {
         }
 
@@ -71,7 +71,7 @@ namespace PongHost
             return intersectX && intersectY;
         }
 
-        private void WhenCollision(Rectangle ball)
+        private void WhenCollision(Rectangle ball) //dictates the speed of the ball when a collision happens
         {
             int x = randSpeed[rand.Next(randSpeed.Length)]; //randomizes speeds on both axes 
             int y = randSpeed[rand.Next(randSpeed.Length)];
@@ -111,7 +111,7 @@ namespace PongHost
         }
 
 
-        internal Data GetNextFrame()
+        internal Data GetNextFrame() //calculates the speeds positions and scores for each frame.
         {
             CalcPlayerPosition(this.player1);
             CalcPlayerPosition(this.player2);
@@ -146,7 +146,6 @@ namespace PongHost
             // if the ball either reachers the top of the screen or the bottom
             if (this.ball.Top < 0 || ball.Top + ball.Height >= this.clientHeight)
             {
-                // then
                 //reverse the speed of the ball so it stays within the screen
                 this.ballY = -this.ballY;
             }

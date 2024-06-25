@@ -5,7 +5,7 @@ namespace PongHost
 {
     internal class Stats : FileHandler<UserStats>
     {
-        public Stats() : base("stats.csv")
+        public Stats() : base("stats.csv") //empty constructor. summons the base constructor
         {
         }
 
@@ -25,24 +25,24 @@ namespace PongHost
             }
         }
 
-        protected override string EntryToRow(KeyValuePair<string, UserStats> entry)
+        protected override string EntryToRow(KeyValuePair<string, UserStats> entry) //receives an entry from the dictionary and writes it into the dictionary
         {
             return $"{entry.Key},{entry.Value.gamesWon},{entry.Value.gamesLost}";
         }
 
-        internal string GetStructAsString(string username)
+        internal string GetStructAsString(string username) //receives the username and returns the string of the stats
         {
             UserStats user = this.data[username];
             return user.gamesWon + "-" + user.gamesLost;
         }
 
-        internal void CreateNewEntry(string username)
+        internal void CreateNewEntry(string username) //creates new entry in the dictionary and updates the file
         {
             data.Add(username, new UserStats(0, 0)); //defaults at 0
             SerializeData();
         }
 
-        internal void UpdateEntry(string username, int wonChange, int lostChange)
+        internal void UpdateEntry(string username, int wonChange, int lostChange) //updates the stats in the dictionary and then in the file
         {
             UserStats userStats = data[username];
             userStats.gamesWon += wonChange;
